@@ -1,0 +1,161 @@
+body {
+  background-color: #f1f1f1;
+}
+.box-shadow {
+  box-shadow: -5px -5px 8px 1px rgb(255, 255, 255), 0 2px 5px 3px #c7c7c7;
+}
+.box-shade {
+  box-shadow: -5px -5px 8px 1px rgb(255, 255, 255), 0 2px 5px 3px #c7c7c7;
+  transition: 0.5s;
+  cursor: pointer;
+  z-index: 1;
+} 
+.box-shade:hover {
+  transition: 0.5s;
+  box-shadow: -5px -5px 8px 1px rgb(255, 255, 255), 0 2px 5px 3px #6e6e6e;
+}
+.menu {
+  display: flex;
+  width: 10vw;
+}
+.menu div {
+  padding: 5px 15px;
+}
+.about {
+  display: flex;
+  vertical-align: middle;
+}
+
+.Header .header-main {
+  width: 35vw;
+  font-size: 80px;
+  line-height: 100px;
+  font-weight: 480;
+}
+.Header .header-sub {
+  width: 40vw;
+  font-size: 35px;
+}
+.Header .header-button {
+  width: 280px;
+  text-align: center;
+  padding: 15px 20px;
+  border-radius: 15px;
+  margin: 25px 0px;
+}
+.about-me {
+  margin: 15vh 6vw;
+  padding: 5vh 3vw;
+  border-radius: 50px;
+}
+.about-me .header {
+  font-size: 80px !important;
+}
+.about-me .sub-text {
+  font-size: 30px;
+}
+.about-me img {
+  width: 4vw;
+}
+.skills .header {
+  font-size: 80px !important;
+  padding: 5vh 3vw;
+}
+.skill {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+.skills-list {
+  padding: 0vh 5vw;
+  display: flex;
+  justify-content: space-around;
+}
+.skill img {
+  max-width: 100px;
+  margin: 1px 15px;
+}
+
+.contact {
+  margin: 15vh 6vw;
+  padding: 10vh 3vw;
+  border-radius: 50px;
+  text-align: center;
+}
+.contact .header {
+  font-size: 80px !important;
+  color: #555555;
+}
+.contact-list {
+  display: flex;
+  justify-content: center;
+}
+.social {
+  display: flex;
+  margin: 0px 15px;
+}
+.social div {
+  padding: 20px 30px;
+  border-radius: 50%;
+  color: #555555;
+}
+.copyrights {
+  padding: 1% 0px;
+}
+.copyrights .left {
+  margin: 5px 200px;
+}
+.copyrights .right {
+  margin: 5px 200px;
+}
+.Activities {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.Activities .header {
+  font-size: 50px !important;
+  color: #555555;
+  padding: 5vh 3vw;
+}
+
+.Activities-items {
+  display: flex;
+  justify-content: center;
+  padding: 0px 5rem;
+}
+.Activities-item {
+  border-radius: 15%;
+  font-size: 30px;
+  height: 20rem;
+  width: 18rem;
+  overflow: hidden;
+  padding: 30px;
+  color: #8c8c95;
+  margin: 0px 25px;
+}
+
+.project-item{
+  border-radius: 2rem;
+  font-size: 30px;
+  height: 22rem;
+  width: 80vw;
+  overflow: hidden;
+  padding: 30px;
+  color: #8c8c95;
+  margin: 2px 25px;
+}
+.project-header{
+  font-size: larger;
+}
+.project-subtext{
+  font-size: smaller;
+}
+.project-button {
+  width: 150px;
+  font-size: x-small;
+  text-align: center;
+  padding: 10px 15px;
+  border-radius: 15px;
+}
