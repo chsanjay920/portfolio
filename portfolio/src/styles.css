@@ -1,0 +1,265 @@
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@500;600&family=Fasthand&family=Playfair+Display&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 100vh;
+  background:  #ffffff;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  border-radius: 100vh;
+  background:  #76d0db;
+}
+
+body {
+  background-color: #f1f1f1;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+.box-shadow {
+  box-shadow: -5px -5px 8px 1px rgb(255, 255, 255), 0 2px 5px 3px #c7c7c7;
+}
+.box-shade {
+  box-shadow: -5px -5px 8px 1px rgb(255, 255, 255), 0 2px 5px 3px #c7c7c7;
+  transition: 0.5s;
+  cursor: pointer;
+  z-index: 1;
+}
+.box-shade:hover {
+  transition: 0.5s;
+  box-shadow: -5px -5px 8px 1px rgb(255, 255, 255), 0 2px 5px 3px #6e6e6e;
+}
+.menu {
+  display: flex;
+  user-select: none;
+}
+.menu div {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  border-radius: 50%;
+}
+.about {
+}
+.Header {
+  padding-left: 10%;
+}
+.Header .header-main {
+  font-size: 50px;
+  line-height: 80px;
+  font-weight: 480;
+  color: #555555;
+
+}
+.Header .header-sub {
+  font-size: 30px;
+  font-weight: lighter;
+  line-height: 50px;
+}
+.Header .header-button {
+  max-width: 250px;
+  text-align: center;
+  padding: 8px;
+  border-radius: 15px;
+  margin: 25px 0px;
+}
+
+.about-me {
+  margin: 15vh 6vw;
+  padding: 5vh 3vw;
+  border-radius: 50px;
+}
+.about-me .header {
+  font-size: 50px;
+  font-weight: 480;
+  color: #555555;
+}
+.about-me .sub-text {
+  font-size: 30px;
+}
+.about-me img {
+  width: 3rem;
+}
+@media screen and (max-width: 700px) {
+  .Header {
+    padding: 10%;
+    text-align: center;
+  }
+  .about-me  {
+    text-align: center;
+  }
+  .skills{
+    padding: 30px;
+  }
+  .skill img{
+    margin: 20px 10px;
+  }
+  .project-description{
+    display: none;
+  }
+  .social div {
+    width: 80%;
+  }
+}
+
+.skills .header {
+  font-size: 50px;
+  padding: 5vh 3vw;
+  font-weight: 480;
+  color: #555555;
+}
+.skill {
+  text-align: center;
+}
+.skills-list {
+  padding: 0vh 4vw;
+  display: flex;
+  justify-content: space-around;
+}
+.skill img {
+  height: 80px;
+}
+.skill-text{
+  font-family: "Roboto", sans-serif;
+  font-weight: bold;
+  margin-top: 10px;
+}
+.contact {
+  margin: 15vh 6vw;
+  padding: 10vh 3vw;
+  border-radius: 50px;
+  text-align: center;
+}
+.contact .header {
+  font-size: 50px;
+  color: #555555;
+}
+.contact-list {
+  display: flex;
+  justify-content: center;
+}
+.social {
+  display: flex;
+  justify-content: center;
+  margin: 15px;
+}
+.social div {
+  padding: 20px 30px;
+  border-radius: 1rem;
+  color: #555555;
+}
+
+.NavigationBtns{
+  display: flex;
+  margin: 10px;
+}
+.NavigationBtns  a{
+  padding: 5px 30px;
+  border-radius: 10px;
+  color: #555555;
+  text-decoration: none;
+  color: black;
+}
+
+.copyrights {
+  padding: 25px 100px;
+}
+.copyrights .left {
+  text-align: left;
+}
+.copyrights .right {
+  text-align: right;
+}
+.Projects {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.Projects .header {
+  font-size: 50px ;
+  padding: 5vh 3vw;
+  font-weight: 480;
+  color: #555555;
+
+}
+.Experience {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.Experience .header {
+  font-size: 50px ;
+  padding: 5vh 3vw;
+  font-weight: 480;
+  color: #555555;
+
+}
+
+.Activities {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+}
+.Activities .header {
+  font-size: 50px ;
+  padding: 5vh 3vw;
+  font-weight: 480;
+  color: #555555;
+
+}
+
+.Activities-items {
+  display: flex;
+  justify-content: center;
+  padding: 10px 50px;
+}
+.Activities-item {
+  border-radius: 2rem;
+  font-size: 30px;
+  overflow: hidden;
+  padding: 30px;
+  color: #8c8c95;
+  margin: 15px 25px;
+  width: 19rem;
+}
+
+.project-item {
+  border-radius: 2rem;
+  font-size: 30px;
+  width: 80vw;
+  overflow: hidden;
+  padding: 30px;
+  color: #8c8c95;
+  margin: 2px 25px;
+}
+.project-header {
+  font-size: larger;
+  color: #555555;
+
+}
+.project-subtext {
+  font-size: smaller;
+}
+.project-button {
+  width: 150px;
+  font-size: x-small;
+  text-align: center;
+  padding: 10px 15px;
+  border-radius: 15px;
+}
+.project-image{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.project-image img{
+  width: 100%;
+}
