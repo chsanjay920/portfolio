@@ -263,3 +263,33 @@ body {
 .project-image img{
   width: 100%;
 }
+
+.Works{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.Works .header {
+  font-size: 50px ;
+  padding: 5vh 3vw;
+  font-weight: 480;
+  color: #555555;
+
+}
+
+.work-items {
+  display: flex;
+  justify-content: center;
+  padding: 10px 50px;
+}
+.work-item {
+  border-radius: 2rem;
+  font-size: 25px;
+  overflow: hidden;
+  color: #8c8c95;
+  max-height: 25rem;
+}
+.work-item img {
+  border-radius:15%;
+}
