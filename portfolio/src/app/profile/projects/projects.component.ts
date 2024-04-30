@@ -7,7 +7,6 @@ import { Component } from '@angular/core';
 })
 export class ProjectsComponent {
   Projects: any = [
-    
     {
       link: 'https://github.com/chsanjay920/ProjectManagement',
       Name: 'Project Management System',
@@ -22,6 +21,11 @@ export class ProjectsComponent {
       link: 'https://github.com/chsanjay920/EmployeeManagementSystem',
       Name: 'Employee Management System',
       image: './assets/images/projects/employee_management.jpg',
+    },
+    {
+      link: 'https://kahoot-clone-dun.vercel.app/',
+      Name: 'Kahoot Live Quize Application Clone',
+      image: './assets/images/projects/kahoot.png',
     },
     {
       link: 'https://maze-generator-by-sanjay.vercel.app/',
