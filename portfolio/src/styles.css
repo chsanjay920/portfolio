@@ -234,11 +234,9 @@ body {
 .project-item {
   border-radius: 2rem;
   font-size: 30px;
-  width: 80vw;
-  overflow: hidden;
+  width: 100%;
   padding: 30px;
   color: #8c8c95;
-  margin: 2px 25px;
 }
 .project-header {
   font-size: larger;
