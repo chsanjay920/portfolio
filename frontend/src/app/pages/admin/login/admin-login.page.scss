@@ -1,0 +1,90 @@
+.login {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 16px;
+  display: grid;
+  place-items: center;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 480px;
+  border: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+  border-radius: 14px;
+  padding: 24px;
+  background: var(--surface, #fff);
+}
+
+h1 {
+  margin: 0 0 6px;
+  font-size: 28px;
+  letter-spacing: -0.02em;
+}
+
+.muted {
+  margin: 0 0 18px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+form {
+  display: grid;
+  gap: 12px;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  outline: none;
+  font: inherit;
+}
+
+input:focus {
+  border-color: rgba(0, 0, 0, 0.35);
+}
+
+button {
+  margin-top: 6px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: #111;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button[disabled] {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.error {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(220, 38, 38, 0.08);
+  color: rgb(153, 27, 27);
+  border: 1px solid rgba(220, 38, 38, 0.18);
+}
+
+.back {
+  margin-top: 6px;
+  display: inline-block;
+  color: rgba(0, 0, 0, 0.75);
+  text-decoration: none;
+}
+
+.back:hover {
+  text-decoration: underline;
+}
+

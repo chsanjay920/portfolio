@@ -1,0 +1,42 @@
+@if (idea()) {
+  <article class="article">
+    <app-breadcrumbs [items]="breadcrumbs" />
+    <div class="article-top">
+      <a class="back-link" [routerLink]="backRoute">{{ '← Back to Project Ideas' }}</a>
+    </div>
+
+    <h1 class="article-title">{{ idea()!.title }}</h1>
+
+    <app-content-image [src]="idea()!.image" [alt]="idea()!.title + ' image'" variant="hero" />
+
+    <div class="article-meta">
+      <div class="article-tags">
+        @for (t of idea()!.tags; track t) {
+          <app-tag-pill [label]="t" />
+        }
+      </div>
+    </div>
+
+    <div class="article-content" [innerHTML]="idea()!.content | markdownHtml"></div>
+
+    @if (idea()!.links.length) {
+      <div class="external-links">
+        <h3 class="external-title">Links</h3>
+        <div class="external-list">
+          @for (l of idea()!.links; track l.href) {
+            <a class="entry-link" [href]="l.href" target="_blank" rel="noopener noreferrer">
+              {{ l.label }} ↗
+            </a>
+          }
+        </div>
+      </div>
+    }
+  </article>
+} @else {
+  <app-breadcrumbs [items]="breadcrumbs" />
+  <div class="empty-state">
+    <h2>Idea not found</h2>
+    <a routerLink="/project-ideas">Back to Project Ideas</a>
+  </div>
+}
+

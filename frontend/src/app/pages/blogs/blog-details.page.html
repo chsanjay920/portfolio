@@ -1,0 +1,30 @@
+@if (post()) {
+  <article class="article">
+    <app-breadcrumbs [items]="breadcrumbs" />
+    <div class="article-top">
+      <a class="back-link" routerLink="/blogs">{{ backLabel }}</a>
+    </div>
+
+    <h1 class="article-title">{{ post()!.title }}</h1>
+
+    <app-content-image [src]="post()!.image" [alt]="post()!.title + ' image'" variant="hero" />
+
+    <div class="article-meta">
+      <span class="article-date">{{ post()!.date }}</span>
+      <div class="article-tags">
+        @for (t of post()!.tags; track t) {
+          <app-tag-pill [label]="t" />
+        }
+      </div>
+    </div>
+
+    <div class="article-content" [innerHTML]="post()!.content | markdownHtml"></div>
+  </article>
+} @else {
+  <app-breadcrumbs [items]="breadcrumbs" />
+  <div class="empty-state">
+    <h2>Blog not found</h2>
+    <a routerLink="/blogs">Back to Blogs</a>
+  </div>
+}
+

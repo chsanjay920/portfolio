@@ -1,0 +1,45 @@
+@if (project()) {
+  <article class="article">
+    <app-breadcrumbs [items]="breadcrumbs" />
+    <div class="article-top">
+      <a class="back-link" [routerLink]="backRoute">{{ '← Back to Projects' }}</a>
+    </div>
+
+    <h1 class="article-title">{{ project()!.title }}</h1>
+
+    <app-content-image [src]="project()!.image" [alt]="project()!.title + ' image'" variant="hero" />
+
+    <div class="article-meta">
+      @if (project()!.date) {
+        <span class="article-date">{{ project()!.date }}</span>
+      }
+      <div class="article-tags">
+        @for (t of project()!.tags; track t) {
+          <app-tag-pill [label]="t" />
+        }
+      </div>
+    </div>
+
+    <div class="article-content" [innerHTML]="project()!.content | markdownHtml"></div>
+
+    @if (project()!.links.length) {
+      <div class="external-links">
+        <h3 class="external-title">Links</h3>
+        <div class="external-list">
+          @for (l of project()!.links; track l.href) {
+            <a class="entry-link" [href]="l.href" target="_blank" rel="noopener noreferrer">
+              {{ l.label }} ↗
+            </a>
+          }
+        </div>
+      </div>
+    }
+  </article>
+} @else {
+  <app-breadcrumbs [items]="breadcrumbs" />
+  <div class="empty-state">
+    <h2>Project not found</h2>
+    <a routerLink="/projects">Back to Projects</a>
+  </div>
+}
+

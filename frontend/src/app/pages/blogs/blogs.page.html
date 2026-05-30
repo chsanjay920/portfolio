@@ -1,0 +1,19 @@
+<app-breadcrumbs [items]="breadcrumbs" />
+<app-section-header
+  title="Blogs"
+  subtitle="Clean writing notes with full detail pages."
+/>
+
+<div class="card-grid">
+  @for (b of posts(); track b.slug) {
+    <app-entry-card
+      [title]="b.title"
+      [description]="b.summary"
+      [date]="b.date"
+      [tags]="b.tags"
+      [internalRoute]="'/blogs/' + b.slug"
+      [imageSrc]="b.image"
+    />
+  }
+</div>
+

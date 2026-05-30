@@ -1,0 +1,20 @@
+<app-breadcrumbs [items]="breadcrumbs" />
+<app-section-header
+  title="Certificates"
+  subtitle="Credentials and courses that strengthen the fundamentals."
+/>
+
+<div class="card-grid">
+  @for (c of items(); track c.slug) {
+    <app-entry-card
+      [title]="c.title"
+      [description]="c.summary"
+      [date]="c.date"
+      [tags]="c.tags"
+      [internalRoute]="'/certificates/' + c.slug"
+      [externalLinks]="c.links"
+      [imageSrc]="c.image"
+    />
+  }
+</div>
+

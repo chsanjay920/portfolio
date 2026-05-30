@@ -1,0 +1,29 @@
+<main class="login">
+  <div class="login-card">
+    <h1>Admin Login</h1>
+    <p class="muted">Sign in to manage your portfolio content.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <label>
+        <div class="label">Email</div>
+        <input type="email" formControlName="email" placeholder="admin@example.com" />
+      </label>
+
+      <label>
+        <div class="label">Password</div>
+        <input type="password" formControlName="password" placeholder="••••••••" />
+      </label>
+
+      @if (error) {
+        <div class="error">{{ error }}</div>
+      }
+
+      <button type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Signing in…' : 'Sign in' }}
+      </button>
+
+      <a class="back" routerLink="/">← Back to site</a>
+    </form>
+  </div>
+</main>
+

@@ -1,0 +1,70 @@
+<section class="admin-page">
+  <h1>Projects</h1>
+  <p class="muted">Create/update/delete projects and upload images.</p>
+
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+
+  <div class="grid">
+    <div class="card">
+      <div class="actions">
+        <button type="button" (click)="reload()">Refresh</button>
+        <button class="primary" type="button" (click)="newItem()">New project</button>
+      </div>
+      <div class="list" style="margin-top: 12px;">
+        @for (p of items(); track p._id) {
+          <div class="list-item">
+            <div style="min-width: 0;">
+              <div class="list-title">{{ p.title }}</div>
+              <div class="list-sub">{{ p.slug }}</div>
+            </div>
+            <div class="actions">
+              <button type="button" (click)="select(p)">Edit</button>
+              <button type="button" (click)="remove(p)">Delete</button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="card">
+      <form [formGroup]="form" (ngSubmit)="save()" class="grid">
+        <div class="row">
+          <label>Title</label>
+          <input formControlName="title" />
+        </div>
+        <div class="row">
+          <label>Slug (optional)</label>
+          <input formControlName="slug" />
+        </div>
+        <div class="row">
+          <label>Summary (overview)</label>
+          <textarea formControlName="summary"></textarea>
+        </div>
+        <div class="row">
+          <label>Content (Markdown for details)</label>
+          <textarea formControlName="content" style="min-height: 220px;"></textarea>
+        </div>
+        <div class="row">
+          <label>Tech stack (comma-separated)</label>
+          <input formControlName="techStackCsv" placeholder="Angular, Node, MongoDB" />
+        </div>
+        <div class="row">
+          <label>Links (JSON array)</label>
+          <textarea formControlName="linksJson"></textarea>
+        </div>
+
+        <div class="row">
+          <label>Upload image (select a project first)</label>
+          <input type="file" accept="image/*" (change)="uploadImage($any($event.target).files?.[0] ?? null)" />
+        </div>
+
+        <div class="actions">
+          <button class="primary" type="submit" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+

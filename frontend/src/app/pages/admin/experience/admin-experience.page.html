@@ -1,0 +1,57 @@
+<section class="admin-page">
+  <h1>Experience</h1>
+  <p class="muted">Manage roles, companies, durations, and descriptions (Markdown allowed).</p>
+
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+
+  <div class="grid">
+    <div class="card">
+      <div class="actions">
+        <button type="button" (click)="reload()">Refresh</button>
+        <button class="primary" type="button" (click)="newItem()">New entry</button>
+      </div>
+      <div class="list" style="margin-top: 12px;">
+        @for (e of items(); track e._id) {
+          <div class="list-item">
+            <div style="min-width: 0;">
+              <div class="list-title">{{ e.role }}</div>
+              <div class="list-sub">{{ e.company }} · {{ e.duration }}</div>
+            </div>
+            <div class="actions">
+              <button type="button" (click)="select(e)">Edit</button>
+              <button type="button" (click)="remove(e)">Delete</button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="card">
+      <form [formGroup]="form" (ngSubmit)="save()" class="grid">
+        <div class="row">
+          <label>Role</label>
+          <input formControlName="role" />
+        </div>
+        <div class="row">
+          <label>Company</label>
+          <input formControlName="company" />
+        </div>
+        <div class="row">
+          <label>Duration</label>
+          <input formControlName="duration" placeholder="2024-05 to Present" />
+        </div>
+        <div class="row">
+          <label>Description (Markdown)</label>
+          <textarea formControlName="description"></textarea>
+        </div>
+
+        <div class="actions">
+          <button class="primary" type="submit" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+

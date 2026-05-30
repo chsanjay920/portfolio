@@ -1,0 +1,20 @@
+<app-breadcrumbs [items]="breadcrumbs" />
+<app-section-header
+  title="Projects"
+  subtitle="Selected builds with links to GitHub/demo when available."
+/>
+
+<div class="card-grid">
+  @for (p of posts(); track p.slug) {
+    <app-entry-card
+      [title]="p.title"
+      [description]="p.summary"
+      [date]="p.date"
+      [tags]="p.tags"
+      [internalRoute]="'/projects/' + p.slug"
+      [externalLinks]="p.links"
+      [imageSrc]="p.image"
+    />
+  }
+</div>
+

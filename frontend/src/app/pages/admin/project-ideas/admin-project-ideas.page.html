@@ -1,0 +1,73 @@
+<section class="admin-page">
+  <h1>Project Ideas</h1>
+  <p class="muted">Manage idea entries (summary for overview + markdown content for details).</p>
+
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+
+  <div class="grid">
+    <div class="card">
+        <div class="actions">
+          <button type="button" (click)="reload()">Refresh</button>
+          <button class="primary" type="button" (click)="newItem()">New idea</button>
+        </div>
+      <div class="list" style="margin-top: 12px;">
+        @for (i of items(); track i._id) {
+          <div class="list-item">
+            <div style="min-width: 0;">
+              <div class="list-title">{{ i.title }}</div>
+              <div class="list-sub">{{ i.slug }}</div>
+            </div>
+            <div class="actions">
+              <button type="button" (click)="select(i)">Edit</button>
+              <button type="button" (click)="remove(i)">Delete</button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <label>Current image</label>
+        @if (selected() && imageUrl(selected()!)) {
+          <img [src]="imageUrl(selected()!)!" alt="Project idea image" style="max-width: 180px; border-radius: 12px;" />
+        } @else {
+          <div class="muted">Select an idea to upload or preview its image.</div>
+        }
+        <input type="file" accept="image/*" (change)="uploadImage($any($event.target).files?.[0] ?? null)" />
+      </div>
+    </div>
+
+    <div class="card">
+      <form [formGroup]="form" (ngSubmit)="save()" class="grid">
+        <div class="row">
+          <label>Title</label>
+          <input formControlName="title" />
+        </div>
+        <div class="row">
+          <label>Slug (optional)</label>
+          <input formControlName="slug" />
+        </div>
+        <div class="row">
+          <label>Summary (overview)</label>
+          <textarea formControlName="summary"></textarea>
+        </div>
+        <div class="row">
+          <label>Content (Markdown for details)</label>
+          <textarea formControlName="content" style="min-height: 220px;"></textarea>
+        </div>
+        <div class="row">
+          <label>Resources (JSON array)</label>
+          <textarea formControlName="resourcesJson"></textarea>
+        </div>
+
+        <div class="actions">
+          <button class="primary" type="submit" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+

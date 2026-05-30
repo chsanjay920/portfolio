@@ -1,0 +1,89 @@
+<section class="admin-page">
+  <h1>Profile</h1>
+  <p class="muted">Edit name/title/bio/social links, and upload photo + resume.</p>
+
+  <div class="grid">
+    @if (error()) {
+      <div class="error">{{ error() }}</div>
+    }
+
+    <div class="card">
+      <div class="row">
+        <label>Current photo</label>
+        @if (photoUrl()) {
+          <img [src]="photoUrl()!" alt="Profile photo" style="max-width: 120px; border-radius: 12px;" />
+        } @else {
+          <div class="muted">No photo uploaded yet.</div>
+        }
+        <input type="file" accept="image/*" (change)="uploadPhoto($any($event.target).files?.[0] ?? null)" />
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <label>Resume</label>
+        <a [href]="resumeUrl()" target="_blank" rel="noopener noreferrer">Download current resume</a>
+        <input type="file" (change)="uploadResume($any($event.target).files?.[0] ?? null)" />
+      </div>
+    </div>
+
+    <div class="card">
+      <form [formGroup]="form" (ngSubmit)="save()" class="grid">
+        <div class="row">
+          <label>Full name</label>
+          <input formControlName="fullName" />
+        </div>
+
+        <div class="row">
+          <label>Title</label>
+          <input formControlName="title" />
+        </div>
+
+        <div class="row">
+          <label>Bio</label>
+          <textarea formControlName="bio"></textarea>
+        </div>
+
+        <div class="row">
+          <label>Avatar initials</label>
+          <input formControlName="avatarInitials" />
+        </div>
+
+        <div class="row">
+          <label>Avatar alt text</label>
+          <input formControlName="avatarAlt" />
+        </div>
+
+        <div class="row social-links-editor" formArrayName="socialLinks">
+          <div class="field-heading">
+            <label>Social profiles</label>
+            <button type="button" (click)="addSocialLink()">Add profile</button>
+          </div>
+
+          @for (link of socialLinks.controls; track $index; let i = $index) {
+            <div class="social-link-row" [formGroupName]="i">
+              <div class="row">
+                <label>Platform</label>
+                <input formControlName="platform" placeholder="LinkedIn" />
+              </div>
+              <div class="row">
+                <label>Display text</label>
+                <input formControlName="label" placeholder="LinkedIn" />
+              </div>
+              <div class="row">
+                <label>Profile URL</label>
+                <input formControlName="href" placeholder="https://www.linkedin.com/in/username" />
+              </div>
+              <button type="button" class="remove-link" (click)="removeSocialLink(i)">Remove</button>
+            </div>
+          }
+        </div>
+
+        <div class="actions">
+          <button class="primary" type="submit" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save profile' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+

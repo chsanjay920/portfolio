@@ -1,0 +1,18 @@
+.content-image {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  background: #f8fafc;
+}
+
+.content-image--card {
+  height: 180px;
+  border-radius: 12px;
+}
+
+.content-image--hero {
+  height: clamp(220px, 38vw, 340px);
+  border-radius: 14px;
+  margin: 1.4rem 0 1.6rem;
+}

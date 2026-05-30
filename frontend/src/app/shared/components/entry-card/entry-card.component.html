@@ -1,0 +1,50 @@
+<article class="entry-card">
+  @if (internalRoute) {
+    <a class="entry-card-main" [routerLink]="internalRoute">
+      <app-content-image [src]="imageSrc" [alt]="title + ' thumbnail'" variant="card" />
+      <h3 class="entry-card-title">{{ title }}</h3>
+      @if (date) {
+        <div class="entry-card-date">{{ date }}</div>
+      }
+      @if (description) {
+        <p class="entry-card-description">{{ description }}</p>
+      }
+      @if (tags.length) {
+        <div class="entry-card-tags">
+          @for (t of tags; track t) {
+            <app-tag-pill [label]="t" />
+          }
+        </div>
+      }
+    </a>
+  } @else {
+    <div class="entry-card-main">
+      <app-content-image [src]="imageSrc" [alt]="title + ' thumbnail'" variant="card" />
+      <h3 class="entry-card-title">{{ title }}</h3>
+      @if (date) {
+        <div class="entry-card-date">{{ date }}</div>
+      }
+      @if (description) {
+        <p class="entry-card-description">{{ description }}</p>
+      }
+      @if (tags.length) {
+        <div class="entry-card-tags">
+          @for (t of tags; track t) {
+            <app-tag-pill [label]="t" />
+          }
+        </div>
+      }
+    </div>
+  }
+
+  @if (externalLinks.length) {
+    <div class="entry-card-links">
+      @for (l of externalLinks; track l.href) {
+        <a class="entry-link" [href]="l.href" target="_blank" rel="noopener noreferrer">
+          {{ l.label }} ↗
+        </a>
+      }
+    </div>
+  }
+</article>
+

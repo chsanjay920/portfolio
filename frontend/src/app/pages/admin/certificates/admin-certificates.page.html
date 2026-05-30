@@ -1,0 +1,74 @@
+<section class="admin-page">
+  <h1>Certificates</h1>
+  <p class="muted">Manage certificates and upload images.</p>
+
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+
+  <div class="grid">
+    <div class="card">
+      <div class="actions">
+        <button type="button" (click)="reload()">Refresh</button>
+        <button class="primary" type="button" (click)="newItem()">New certificate</button>
+      </div>
+      <div class="list" style="margin-top: 12px;">
+        @for (c of items(); track c._id) {
+          <div class="list-item">
+            <div style="min-width: 0;">
+              <div class="list-title">{{ c.title }}</div>
+              <div class="list-sub">{{ c.issuer }} · {{ c.date }}</div>
+            </div>
+            <div class="actions">
+              <button type="button" (click)="select(c)">Edit</button>
+              <button type="button" (click)="remove(c)">Delete</button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="card">
+      <form [formGroup]="form" (ngSubmit)="save()" class="grid">
+        <div class="row">
+          <label>Title</label>
+          <input formControlName="title" />
+        </div>
+        <div class="row">
+          <label>Slug (optional)</label>
+          <input formControlName="slug" />
+        </div>
+        <div class="row">
+          <label>Issuer</label>
+          <input formControlName="issuer" />
+        </div>
+        <div class="row">
+          <label>Date</label>
+          <input formControlName="date" />
+        </div>
+        <div class="row">
+          <label>Credential link (optional)</label>
+          <input formControlName="credentialLink" placeholder="https://..." />
+        </div>
+        <div class="row">
+          <label>Summary (overview)</label>
+          <textarea formControlName="summary"></textarea>
+        </div>
+        <div class="row">
+          <label>Content (Markdown for details)</label>
+          <textarea formControlName="content" style="min-height: 220px;"></textarea>
+        </div>
+
+        <div class="row">
+          <label>Upload image (select a certificate first)</label>
+          <input type="file" accept="image/*" (change)="uploadImage($any($event.target).files?.[0] ?? null)" />
+        </div>
+
+        <div class="actions">
+          <button class="primary" type="submit" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+

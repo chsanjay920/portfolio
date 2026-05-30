@@ -1,0 +1,25 @@
+<section class="profile-card">
+  <div class="profile-avatar" aria-label="{{ profile.avatarAlt }}">
+    @if (profile.avatarImage && !avatarFailed) {
+      <img class="avatar-image" [src]="profile.avatarImage" [alt]="profile.avatarAlt" (error)="handleAvatarError()" />
+    } @else {
+      <span class="avatar-initials">{{ profile.avatarInitials }}</span>
+    }
+  </div>
+
+  <h1 class="profile-name">{{ profile.fullName }}</h1>
+  <h2 class="profile-title">{{ profile.title }}</h2>
+
+  <p class="profile-bio">{{ profile.bio }}</p>
+
+  <div class="profile-links" aria-label="Social links">
+    @for (s of profile.socialLinks; track s.href) {
+      <a class="profile-link" [href]="s.href" target="_blank" rel="noopener noreferrer">
+        {{ s.label }}
+      </a>
+    }
+  </div>
+
+  <a class="resume-button" [href]="profile.resumeUrl" download>Resume</a>
+</section>
+

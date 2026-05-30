@@ -1,0 +1,74 @@
+<section class="admin-page">
+  <h1>Blogs</h1>
+  <p class="muted">Create/edit posts (Markdown supported) and upload banner images.</p>
+
+  @if (error()) {
+    <div class="error">{{ error() }}</div>
+  }
+
+  <div class="grid" style="grid-template-columns: 1fr; align-items: start;">
+    <div class="card">
+      <div class="actions">
+        <button type="button" (click)="reload()">Refresh</button>
+        <button class="primary" type="button" (click)="newPost()">New post</button>
+      </div>
+      <div class="list" style="margin-top: 12px;">
+        @for (b of items(); track b._id) {
+          <div class="list-item">
+            <div style="min-width: 0;">
+              <div class="list-title">{{ b.title }}</div>
+              <div class="list-sub">{{ b.publishDate }} · {{ b.slug }}</div>
+            </div>
+            <div class="actions">
+              <button type="button" (click)="select(b)">Edit</button>
+              <button type="button" (click)="remove(b)">Delete</button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="card">
+      <form [formGroup]="form" (ngSubmit)="save()" class="grid">
+        <div class="row">
+          <label>Title</label>
+          <input formControlName="title" />
+        </div>
+        <div class="row">
+          <label>Slug (optional)</label>
+          <input formControlName="slug" placeholder="auto-generated if blank" />
+        </div>
+        <div class="row">
+          <label>Summary</label>
+          <textarea formControlName="summary"></textarea>
+        </div>
+        <div class="row">
+          <label>Publish date (YYYY-MM-DD)</label>
+          <input formControlName="publishDate" />
+        </div>
+        <div class="row">
+          <label>Tags (comma-separated)</label>
+          <input formControlName="tagsCsv" placeholder="Angular, Node, MongoDB" />
+        </div>
+        <div class="row">
+          <label>Markdown file (.md) upload</label>
+          <input type="file" accept=".md,text/markdown" (change)="uploadMarkdown($any($event.target).files?.[0] ?? null)" />
+        </div>
+        <div class="row">
+          <label>Content (Markdown)</label>
+          <textarea formControlName="content" style="min-height: 220px;"></textarea>
+        </div>
+
+        <div class="row">
+          <label>Banner image upload (select an existing blog first)</label>
+          <input type="file" accept="image/*" (change)="uploadBanner($any($event.target).files?.[0] ?? null)" />
+        </div>
+
+        <div class="actions">
+          <button class="primary" type="submit" [disabled]="saving()">{{ saving() ? 'Saving…' : 'Save' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+

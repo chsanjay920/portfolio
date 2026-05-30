@@ -1,0 +1,43 @@
+@if (item()) {
+  <article class="article">
+    <app-breadcrumbs [items]="breadcrumbs" />
+    <div class="article-top">
+      <a class="back-link" [routerLink]="backRoute">{{ '← Back to Certificates' }}</a>
+    </div>
+
+    <h1 class="article-title">{{ item()!.title }}</h1>
+
+    <app-content-image [src]="item()!.image" [alt]="item()!.title + ' image'" variant="hero" />
+
+    <div class="article-meta">
+      <span class="article-date">{{ item()!.date }}</span>
+      <div class="article-tags">
+        @for (t of item()!.tags; track t) {
+          <app-tag-pill [label]="t" />
+        }
+      </div>
+    </div>
+
+    <div class="article-content" [innerHTML]="item()!.content | markdownHtml"></div>
+
+    @if (item()!.links.length) {
+      <div class="external-links">
+        <h3 class="external-title">Links</h3>
+        <div class="external-list">
+          @for (l of item()!.links; track l.href) {
+            <a class="entry-link" [href]="l.href" target="_blank" rel="noopener noreferrer">
+              {{ l.label }} ↗
+            </a>
+          }
+        </div>
+      </div>
+    }
+  </article>
+} @else {
+  <app-breadcrumbs [items]="breadcrumbs" />
+  <div class="empty-state">
+    <h2>Certificate not found</h2>
+    <a routerLink="/certificates">Back to Certificates</a>
+  </div>
+}
+

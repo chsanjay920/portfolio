@@ -1,0 +1,9 @@
+<div class="toast-wrap" aria-live="polite" aria-atomic="true">
+  @for (t of toast.toasts(); track t.id) {
+    <div class="toast" [class.success]="t.kind === 'success'" [class.error]="t.kind === 'error'" [class.info]="t.kind === 'info'">
+      <div class="msg">{{ t.message }}</div>
+      <button type="button" class="x" (click)="toast.dismiss(t.id)" aria-label="Dismiss">✕</button>
+    </div>
+  }
+</div>
+

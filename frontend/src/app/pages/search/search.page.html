@@ -1,0 +1,50 @@
+<app-breadcrumbs [items]="breadcrumbs" />
+<app-section-header title="Search" subtitle="Find blogs, projects, ideas, certificates, and more." />
+
+<div class="search-bar">
+  <input
+    class="search-input"
+    type="search"
+    placeholder="Type to search…"
+    [value]="query"
+    (input)="query = $any($event.target).value"
+    (keydown.enter)="onSubmit()"
+    aria-label="Search"
+  />
+  <button class="search-button" type="button" (click)="onSubmit()">Search</button>
+ </div>
+
+@if (query.trim().length < 2) {
+  <div class="hint">
+    Try searching for <span class="hint-quote">Angular</span>, <span class="hint-quote">UI/UX</span>, or <span class="hint-quote">AWS</span>.
+  </div>
+} @else {
+  @if (results.length === 0) {
+    <div class="empty-state">
+      <h2>No results</h2>
+      <p>Try different keywords or shorter phrases.</p>
+    </div>
+  } @else {
+    <div class="results">
+      @for (group of results; track group.category) {
+        <section class="results-group">
+          <h3 class="results-title">{{ group.category }}</h3>
+          <div class="results-list">
+            @for (r of group.results; track r.route) {
+              <a class="result-item" [routerLink]="r.route">
+                <div class="result-header">
+                  <span class="result-item-title">{{ r.title }}</span>
+                  @if (r.date) {
+                    <span class="result-date">{{ r.date }}</span>
+                  }
+                </div>
+                <div class="result-snippet">{{ r.snippet }}</div>
+              </a>
+            }
+          </div>
+        </section>
+      }
+    </div>
+  }
+}
+

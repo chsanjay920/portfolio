@@ -1,0 +1,30 @@
+.breadcrumbs {
+  margin: 0.75rem 0 1.25rem;
+  color: var(--muted);
+  font-weight: 650;
+  font-size: 0.92rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.crumb-link {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.crumb-link:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+.crumb-current {
+  color: var(--text);
+}
+
+.crumb-sep {
+  color: var(--border);
+  font-weight: 900;
+}
+

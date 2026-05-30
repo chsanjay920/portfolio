@@ -1,0 +1,20 @@
+<div class="admin-shell">
+  <aside class="admin-nav">
+    <div class="admin-brand">Admin</div>
+    <nav class="admin-links">
+      @for (item of nav; track item.href) {
+        <a class="admin-link" [routerLink]="item.href" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{ item.label }}</a>
+      }
+    </nav>
+
+    <div class="admin-footer">
+      <a class="admin-link" routerLink="/">View site</a>
+      <button type="button" (click)="logout()">Logout</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+    <router-outlet />
+  </main>
+</div>
+

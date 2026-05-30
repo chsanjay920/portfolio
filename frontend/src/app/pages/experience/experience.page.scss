@@ -1,0 +1,71 @@
+.timeline {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 1rem;
+}
+
+.timeline-left {
+  position: relative;
+}
+
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--accent);
+  border: 2px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  margin-top: 0.35rem;
+}
+
+.timeline-line {
+  position: absolute;
+  top: 12px;
+  left: 5px;
+  width: 2px;
+  bottom: -1.1rem;
+  background: var(--border);
+}
+
+.timeline-content {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.1rem 1.2rem;
+  background: var(--card-bg);
+}
+
+.timeline-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 850;
+  letter-spacing: -0.01em;
+}
+
+.timeline-org {
+  margin-top: 0.25rem;
+  color: var(--muted);
+  font-weight: 650;
+}
+
+.timeline-duration {
+  margin-top: 0.15rem;
+  color: var(--muted-2);
+  font-weight: 600;
+}
+
+.timeline-description {
+  margin-top: 0.85rem;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.timeline-description ul {
+  padding-left: 1.2rem;
+}
+
