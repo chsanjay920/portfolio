@@ -1,48 +1,96 @@
 <div class="home-stack">
   <app-breadcrumbs [items]="breadcrumbs" />
-  @if (profile()) {
-    <app-profile-card [profile]="profile()!" />
+
+  @if (loading()) {
+    <section class="home-section">
+      <div class="skeleton-card">
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-date short"></div>
+        <div class="skeleton skeleton-line"></div>
+        <div class="skeleton skeleton-line short"></div>
+      </div>
+    </section>
+
+    <section class="home-section">
+      <app-section-header
+        title="Recent Blogs"
+        subtitle="Short writing notes with full detail pages."
+      />
+
+      <div class="card-grid">
+        @for (i of [1, 2, 3]; track i) {
+          <article class="entry-card skeleton-card">
+            <div class="skeleton skeleton-image"></div>
+            <div class="skeleton skeleton-title"></div>
+            <div class="skeleton skeleton-line short"></div>
+            <div class="skeleton skeleton-tags"></div>
+          </article>
+        }
+      </div>
+    </section>
+
+    <section class="home-section">
+      <app-section-header
+        title="Selected Projects"
+        subtitle="Practical builds with clean UI and solid engineering."
+      />
+
+      <div class="card-grid">
+        @for (i of [1, 2, 3]; track i) {
+          <article class="entry-card skeleton-card">
+            <div class="skeleton skeleton-image"></div>
+            <div class="skeleton skeleton-title"></div>
+            <div class="skeleton skeleton-line"></div>
+            <div class="skeleton skeleton-tags"></div>
+          </article>
+        }
+      </div>
+    </section>
+  } @else {
+    @if (profile()) {
+      <app-profile-card [profile]="profile()!" />
+    }
+
+    <section class="home-section">
+      <app-section-header
+        title="Recent Blogs"
+        subtitle="Short writing notes with full detail pages."
+      />
+
+      <div class="card-grid">
+        @for (b of blogs().slice(0, 3); track b.slug) {
+          <app-entry-card
+            [title]="b.title"
+            [description]="b.summary"
+            [date]="b.date"
+            [tags]="b.tags"
+            [internalRoute]="'/blogs/' + b.slug"
+            [imageSrc]="b.image"
+          />
+        }
+      </div>
+    </section>
+
+    <section class="home-section">
+      <app-section-header
+        title="Selected Projects"
+        subtitle="Practical builds with clean UI and solid engineering."
+      />
+
+      <div class="card-grid">
+        @for (p of projects().slice(0, 6); track p.slug) {
+          <app-entry-card
+            [title]="p.title"
+            [description]="p.summary"
+            [date]="p.date"
+            [tags]="p.tags"
+            [internalRoute]="'/projects/' + p.slug"
+            [externalLinks]="p.links"
+            [imageSrc]="p.image"
+          />
+        }
+      </div>
+    </section>
   }
-
-  <section class="home-section">
-    <app-section-header
-      title="Recent Blogs"
-      subtitle="Short writing notes with full detail pages."
-    />
-
-    <div class="card-grid">
-      @for (b of blogs().slice(0, 3); track b.slug) {
-        <app-entry-card
-          [title]="b.title"
-          [description]="b.summary"
-          [date]="b.date"
-          [tags]="b.tags"
-          [internalRoute]="'/blogs/' + b.slug"
-          [imageSrc]="b.image"
-        />
-      }
-    </div>
-  </section>
-
-  <section class="home-section">
-    <app-section-header
-      title="Selected Projects"
-      subtitle="Practical builds with clean UI and solid engineering."
-    />
-
-    <div class="card-grid">
-      @for (p of projects().slice(0, 6); track p.slug) {
-        <app-entry-card
-          [title]="p.title"
-          [description]="p.summary"
-          [date]="p.date"
-          [tags]="p.tags"
-          [internalRoute]="'/projects/' + p.slug"
-          [externalLinks]="p.links"
-          [imageSrc]="p.image"
-        />
-      }
-    </div>
-  </section>
 </div>
 

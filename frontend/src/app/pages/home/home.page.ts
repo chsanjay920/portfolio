@@ -23,6 +23,7 @@ export class HomePageComponent {
   readonly profile = signal<ProfileData | null>(null);
   readonly blogs = signal<BlogPost[]>([]);
   readonly projects = signal<ProjectItem[]>([]);
+  readonly loading = signal(true);
 
   protected readonly breadcrumbs: BreadcrumbItem[] = [{ label: 'Home', href: '/' }];
 
@@ -31,14 +32,18 @@ export class HomePageComponent {
   }
 
   private async load() {
-    const [profile, blogs, projects] = await Promise.all([
-      this.profileApi.getProfile(),
-      this.blogsApi.list(),
-      this.projectsApi.list(),
-    ]);
-    this.profile.set(profile);
-    this.blogs.set(blogs);
-    this.projects.set(projects);
+    try {
+      const [profile, blogs, projects] = await Promise.all([
+        this.profileApi.getProfile(),
+        this.blogsApi.list(),
+        this.projectsApi.list(),
+      ]);
+      this.profile.set(profile);
+      this.blogs.set(blogs);
+      this.projects.set(projects);
+    } finally {
+      this.loading.set(false);
+    }
   }
 }
 

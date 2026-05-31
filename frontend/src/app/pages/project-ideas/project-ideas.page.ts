@@ -15,6 +15,7 @@ import { ProjectIdeasApi } from '../../api/projectIdeas.api';
 export class ProjectIdeasPageComponent {
   private readonly ideasApi = inject(ProjectIdeasApi);
   readonly ideas = signal<ProjectItem[]>([]);
+  readonly loading = signal(true);
 
   protected readonly breadcrumbs: BreadcrumbItem[] = [
     { label: 'Home', href: '/' },
@@ -26,7 +27,11 @@ export class ProjectIdeasPageComponent {
   }
 
   private async load() {
-    this.ideas.set(await this.ideasApi.list());
+    try {
+      this.ideas.set(await this.ideasApi.list());
+    } finally {
+      this.loading.set(false);
+    }
   }
 }
 

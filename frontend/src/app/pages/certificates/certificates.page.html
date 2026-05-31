@@ -5,16 +5,27 @@
 />
 
 <div class="card-grid">
-  @for (c of items(); track c.slug) {
-    <app-entry-card
-      [title]="c.title"
-      [description]="c.summary"
-      [date]="c.date"
-      [tags]="c.tags"
-      [internalRoute]="'/certificates/' + c.slug"
-      [externalLinks]="c.links"
-      [imageSrc]="c.image"
-    />
+  @if (loading()) {
+    @for (i of [1, 2, 3]; track i) {
+      <article class="entry-card skeleton-card">
+        <div class="skeleton skeleton-image"></div>
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-line short"></div>
+        <div class="skeleton skeleton-tags"></div>
+      </article>
+    }
+  } @else {
+    @for (c of items(); track c.slug) {
+      <app-entry-card
+        [title]="c.title"
+        [description]="c.summary"
+        [date]="c.date"
+        [tags]="c.tags"
+        [internalRoute]="'/certificates/' + c.slug"
+        [externalLinks]="c.links"
+        [imageSrc]="c.image"
+      />
+    }
   }
 </div>
 

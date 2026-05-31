@@ -15,6 +15,7 @@ import { CertificatesApi } from '../../api/certificates.api';
 export class CertificatesPageComponent {
   private readonly certificatesApi = inject(CertificatesApi);
   readonly items = signal<CertificateItem[]>([]);
+  readonly loading = signal(true);
 
   protected readonly breadcrumbs: BreadcrumbItem[] = [
     { label: 'Home', href: '/' },
@@ -26,7 +27,11 @@ export class CertificatesPageComponent {
   }
 
   private async load() {
-    this.items.set(await this.certificatesApi.list());
+    try {
+      this.items.set(await this.certificatesApi.list());
+    } finally {
+      this.loading.set(false);
+    }
   }
 }
 

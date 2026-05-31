@@ -1,4 +1,25 @@
-@if (idea()) {
+@if (loading()) {
+  <article class="article article--skeleton">
+    <app-breadcrumbs [items]="breadcrumbs" />
+    <div class="article-top">
+      <div class="skeleton skeleton-line short"></div>
+    </div>
+
+    <div class="skeleton skeleton-title"></div>
+    <div class="skeleton skeleton-subtitle short"></div>
+    <div class="skeleton skeleton-image hero"></div>
+
+    <div class="article-meta">
+      <div class="skeleton skeleton-tags"></div>
+    </div>
+
+    <div class="article-content">
+      @for (i of [1, 2, 3]; track i) {
+        <div class="skeleton skeleton-block"></div>
+      }
+    </div>
+  </article>
+} @else if (idea()) {
   <article class="article">
     <app-breadcrumbs [items]="breadcrumbs" />
     <div class="article-top">
@@ -17,7 +38,7 @@
       </div>
     </div>
 
-    <div class="article-content" [innerHTML]="idea()!.content | markdownHtml"></div>
+    <div class="article-content" (click)="copyCode($event)" [innerHTML]="idea()!.content | markdownHtml"></div>
 
     @if (idea()!.links.length) {
       <div class="external-links">

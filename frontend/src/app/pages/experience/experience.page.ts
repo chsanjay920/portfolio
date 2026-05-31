@@ -15,6 +15,7 @@ import { ExperienceApi } from '../../api/experience.api';
 export class ExperiencePageComponent {
   private readonly experienceApi = inject(ExperienceApi);
   readonly items = signal<ExperienceItem[]>([]);
+  readonly loading = signal(true);
 
   protected readonly breadcrumbs: BreadcrumbItem[] = [
     { label: 'Home', href: '/' },
@@ -26,7 +27,11 @@ export class ExperiencePageComponent {
   }
 
   private async load() {
-    this.items.set(await this.experienceApi.list());
+    try {
+      this.items.set(await this.experienceApi.list());
+    } finally {
+      this.loading.set(false);
+    }
   }
 }
 

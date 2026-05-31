@@ -2,26 +2,44 @@
 <app-section-header title="Education" subtitle="Degrees, specializations, and learning milestones." />
 
 <div class="timeline">
-  @for (e of items(); track e.id) {
-    <section class="timeline-item" [id]="e.id">
-      <div class="timeline-left">
-        <div class="timeline-dot timeline-dot--education"></div>
-        <div class="timeline-line"></div>
-      </div>
-
-      <div class="timeline-content">
-        <h3 class="timeline-title">{{ e.title }}</h3>
-        <div class="timeline-org">{{ e.institution }}</div>
-        <div class="timeline-duration">
-          @if (e.end) {
-            {{ e.start }} — {{ e.end }}
-          } @else {
-            {{ e.start }}
-          }
+  @if (loading()) {
+    @for (i of [1, 2, 3]; track i) {
+      <section class="timeline-item skeleton-timeline">
+        <div class="timeline-left">
+          <div class="timeline-dot timeline-dot--education"></div>
+          <div class="timeline-line"></div>
         </div>
-        <div class="timeline-description" [innerHTML]="e.description | markdownHtml"></div>
-      </div>
-    </section>
+
+        <div class="timeline-content">
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-date short"></div>
+          <div class="skeleton skeleton-line"></div>
+          <div class="skeleton skeleton-line"></div>
+        </div>
+      </section>
+    }
+  } @else {
+    @for (e of items(); track e.id) {
+      <section class="timeline-item" [id]="e.id">
+        <div class="timeline-left">
+          <div class="timeline-dot timeline-dot--education"></div>
+          <div class="timeline-line"></div>
+        </div>
+
+        <div class="timeline-content">
+          <h3 class="timeline-title">{{ e.title }}</h3>
+          <div class="timeline-org">{{ e.institution }}</div>
+          <div class="timeline-duration">
+            @if (e.end) {
+              {{ e.start }} — {{ e.end }}
+            } @else {
+              {{ e.start }}
+            }
+          </div>
+          <div class="timeline-description" [innerHTML]="e.description | markdownHtml"></div>
+        </div>
+      </section>
+    }
   }
 </div>
 

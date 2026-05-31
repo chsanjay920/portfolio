@@ -15,6 +15,7 @@ import { EducationApi } from '../../api/education.api';
 export class EducationPageComponent {
   private readonly educationApi = inject(EducationApi);
   readonly items = signal<EducationItem[]>([]);
+  readonly loading = signal(true);
 
   protected readonly breadcrumbs: BreadcrumbItem[] = [
     { label: 'Home', href: '/' },
@@ -26,7 +27,11 @@ export class EducationPageComponent {
   }
 
   private async load() {
-    this.items.set(await this.educationApi.list());
+    try {
+      this.items.set(await this.educationApi.list());
+    } finally {
+      this.loading.set(false);
+    }
   }
 }
 

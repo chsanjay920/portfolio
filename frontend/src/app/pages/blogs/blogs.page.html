@@ -5,15 +5,26 @@
 />
 
 <div class="card-grid">
-  @for (b of posts(); track b.slug) {
-    <app-entry-card
-      [title]="b.title"
-      [description]="b.summary"
-      [date]="b.date"
-      [tags]="b.tags"
-      [internalRoute]="'/blogs/' + b.slug"
-      [imageSrc]="b.image"
-    />
+  @if (loading()) {
+    @for (i of [1, 2, 3]; track i) {
+      <article class="entry-card skeleton-card">
+        <div class="skeleton skeleton-image"></div>
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-line short"></div>
+        <div class="skeleton skeleton-tags"></div>
+      </article>
+    }
+  } @else {
+    @for (b of posts(); track b.slug) {
+      <app-entry-card
+        [title]="b.title"
+        [description]="b.summary"
+        [date]="b.date"
+        [tags]="b.tags"
+        [internalRoute]="'/blogs/' + b.slug"
+        [imageSrc]="b.image"
+      />
+    }
   }
 </div>
 

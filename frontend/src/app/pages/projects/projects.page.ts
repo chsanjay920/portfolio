@@ -15,6 +15,8 @@ import { ProjectsApi } from '../../api/projects.api';
 export class ProjectsPageComponent {
   private readonly projectsApi = inject(ProjectsApi);
   readonly posts = signal<ProjectItem[]>([]);
+  readonly loading = signal(true);
+
   protected readonly breadcrumbs: BreadcrumbItem[] = [
     { label: 'Home', href: '/' },
     { label: 'Projects', href: '/projects' },
@@ -25,7 +27,11 @@ export class ProjectsPageComponent {
   }
 
   private async load() {
-    this.posts.set(await this.projectsApi.list());
+    try {
+      this.posts.set(await this.projectsApi.list());
+    } finally {
+      this.loading.set(false);
+    }
   }
 }
 
