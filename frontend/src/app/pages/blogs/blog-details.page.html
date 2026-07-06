@@ -40,7 +40,7 @@
       </div>
     </div>
 
-    <div class="article-content" (click)="copyCode($event)" [innerHTML]="post()!.content | markdownHtml"></div>
+    <div class="article-content" appCodeCopy [innerHTML]="post()!.content | markdownHtml"></div>
   </article>
 } @else {
   <app-breadcrumbs [items]="breadcrumbs" />

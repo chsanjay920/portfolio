@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../../shared/toast/toast.service';
+import { getHttpErrorMessage } from '../../../shared/utils/http-error';
 
 type EducationDoc = {
   _id: string;
@@ -79,9 +80,10 @@ export class AdminEducationPageComponent {
       }
       await this.reload();
       this.newItem();
-    } catch {
-      this.error.set('Failed to save education.');
-      this.toast.error('Failed to save education');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to save education.');
+      this.error.set(message);
+      this.toast.error(message);
     } finally {
       this.saving.set(false);
     }
@@ -95,9 +97,10 @@ export class AdminEducationPageComponent {
       await this.reload();
       if (this.selected()?._id === e._id) this.newItem();
       this.toast.success('Education deleted');
-    } catch {
-      this.error.set('Failed to delete education.');
-      this.toast.error('Failed to delete education');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to delete education.');
+      this.error.set(message);
+      this.toast.error(message);
     }
   }
 }

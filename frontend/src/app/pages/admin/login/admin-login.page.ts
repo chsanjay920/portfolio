@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../auth/auth.service';
+import { getHttpErrorMessage } from '../../../shared/utils/http-error';
 
 @Component({
   selector: 'app-admin-login-page',
@@ -35,8 +36,8 @@ export class AdminLoginPageComponent {
       const { email, password } = this.form.getRawValue();
       await this.auth.login(email, password);
       await this.router.navigateByUrl('/admin');
-    } catch {
-      this.error = 'Invalid email or password';
+    } catch (err) {
+      this.error = getHttpErrorMessage(err, 'Invalid email or password');
     } finally {
       this.isSubmitting = false;
     }

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../../shared/toast/toast.service';
+import { getHttpErrorMessage } from '../../../shared/utils/http-error';
 
 type BlogListItem = {
   _id: string;
@@ -31,6 +32,7 @@ export class AdminBlogsPageComponent {
 
   protected readonly items = signal<BlogListItem[]>([]);
   protected readonly selected = signal<BlogDoc | null>(null);
+  protected readonly pendingBannerFile = signal<File | null>(null);
   protected readonly error = signal<string | null>(null);
   protected readonly saving = signal(false);
 
@@ -67,6 +69,7 @@ export class AdminBlogsPageComponent {
         this.http.get<{ blog: BlogDoc }>(`${environment.apiBaseUrl}/blogs/${encodeURIComponent(item.slug)}`),
       );
       this.selected.set(res.blog);
+      this.pendingBannerFile.set(null);
       this.form.patchValue({
         title: res.blog.title,
         slug: res.blog.slug,
@@ -75,13 +78,15 @@ export class AdminBlogsPageComponent {
         tagsCsv: (res.blog.tags ?? []).join(', '),
         content: res.blog.content,
       });
-    } catch {
-      this.error.set('Failed to load blog.');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to load blog.');
+      this.error.set(message);
     }
   }
 
   newPost() {
     this.selected.set(null);
+    this.pendingBannerFile.set(null);
     this.form.reset({
       title: '',
       slug: '',
@@ -116,18 +121,42 @@ export class AdminBlogsPageComponent {
     this.saving.set(true);
     try {
       const sel = this.selected();
+      let savedBlog: BlogDoc;
+
       if (!sel) {
-        await firstValueFrom(this.http.post(`${environment.apiBaseUrl}/blogs`, body));
+        const res = await firstValueFrom(
+          this.http.post<{ blog: BlogDoc }>(`${environment.apiBaseUrl}/blogs`, body),
+        );
+        savedBlog = res.blog;
         this.toast.success('Blog created');
       } else {
-        await firstValueFrom(this.http.put(`${environment.apiBaseUrl}/blogs/${sel._id}`, body));
+        const res = await firstValueFrom(
+          this.http.put<{ blog: BlogDoc }>(`${environment.apiBaseUrl}/blogs/${sel._id}`, body),
+        );
+        savedBlog = res.blog;
         this.toast.success('Blog updated');
       }
+
+      const pendingBanner = this.pendingBannerFile();
+      if (pendingBanner) {
+        savedBlog = await this.uploadBannerToBlog(savedBlog._id, pendingBanner);
+        this.pendingBannerFile.set(null);
+      }
+
       await this.reload();
-      this.newPost();
-    } catch {
-      this.error.set('Failed to save blog.');
-      this.toast.error('Failed to save blog');
+      this.selected.set(savedBlog);
+      this.form.patchValue({
+        title: savedBlog.title,
+        slug: savedBlog.slug,
+        summary: savedBlog.summary,
+        publishDate: savedBlog.publishDate,
+        tagsCsv: (savedBlog.tags ?? []).join(', '),
+        content: savedBlog.content,
+      });
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to save blog.');
+      this.error.set(message);
+      this.toast.error(message);
     } finally {
       this.saving.set(false);
     }
@@ -141,9 +170,10 @@ export class AdminBlogsPageComponent {
       await this.reload();
       if (this.selected()?._id === item._id) this.newPost();
       this.toast.success('Blog deleted');
-    } catch {
-      this.error.set('Failed to delete blog.');
-      this.toast.error('Failed to delete blog');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to delete blog.');
+      this.error.set(message);
+      this.toast.error(message);
     }
   }
 
@@ -153,23 +183,37 @@ export class AdminBlogsPageComponent {
     this.form.controls.content.setValue(text);
   }
 
-  async uploadBanner(file: File | null) {
+  async onBannerSelected(file: File | null) {
+    if (!file) return;
+
     const sel = this.selected();
-    if (!file || !sel) {
-      this.error.set('Select a blog first, then upload a banner.');
+    if (sel) {
+      this.error.set(null);
+      try {
+        const blog = await this.uploadBannerToBlog(sel._id, file);
+        this.selected.set(blog);
+        await this.reload();
+      } catch (err) {
+        const message = getHttpErrorMessage(err, 'Failed to upload banner.');
+        this.error.set(message);
+        this.toast.error(message);
+      }
       return;
     }
+
+    this.pendingBannerFile.set(file);
     this.error.set(null);
+    this.toast.success('Banner will upload when you save the post');
+  }
+
+  private async uploadBannerToBlog(blogId: string, file: File): Promise<BlogDoc> {
     const fd = new FormData();
     fd.append('file', file);
-    try {
-      await firstValueFrom(this.http.post(`${environment.apiBaseUrl}/blogs/${sel._id}/banner`, fd));
-      await this.reload();
-      this.toast.success('Banner uploaded');
-    } catch {
-      this.error.set('Failed to upload banner.');
-      this.toast.error('Failed to upload banner');
-    }
+    const res = await firstValueFrom(
+      this.http.post<{ blog: BlogDoc }>(`${environment.apiBaseUrl}/blogs/${blogId}/banner`, fd),
+    );
+    this.toast.success('Banner uploaded');
+    return res.blog;
   }
 }
 

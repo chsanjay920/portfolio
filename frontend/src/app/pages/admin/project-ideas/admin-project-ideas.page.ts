@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../../shared/toast/toast.service';
+import { getHttpErrorMessage } from '../../../shared/utils/http-error';
 
 type IdeaDoc = {
   _id: string;
@@ -108,9 +109,10 @@ export class AdminProjectIdeasPageComponent {
       }
       await this.reload();
       this.newItem();
-    } catch {
-      this.error.set('Failed to save idea.');
-      this.toast.error('Failed to save idea');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to save idea.');
+      this.error.set(message);
+      this.toast.error(message);
     } finally {
       this.saving.set(false);
     }
@@ -124,9 +126,10 @@ export class AdminProjectIdeasPageComponent {
       await this.reload();
       if (this.selected()?._id === i._id) this.newItem();
       this.toast.success('Idea deleted');
-    } catch {
-      this.error.set('Failed to delete idea.');
-      this.toast.error('Failed to delete idea');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to delete idea.');
+      this.error.set(message);
+      this.toast.error(message);
     }
   }
 
@@ -143,9 +146,10 @@ export class AdminProjectIdeasPageComponent {
       await firstValueFrom(this.http.post(`${environment.apiBaseUrl}/projectIdeas/${sel._id}/image`, fd));
       await this.reload();
       this.toast.success('Image uploaded');
-    } catch {
-      this.error.set('Failed to upload image.');
-      this.toast.error('Failed to upload image');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to upload image.');
+      this.error.set(message);
+      this.toast.error(message);
     }
   }
 }

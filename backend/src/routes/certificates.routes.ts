@@ -7,13 +7,14 @@ import { requireAuth } from '../middleware/requireAuth.js';
 import { ApiError } from '../middleware/apiError.js';
 import { uploadBufferToR2 } from '../utils/r2.js';
 import { mapFileIds } from '../utils/json.js';
+import { optionalUrlString } from '../utils/validation.js';
 
 const createSchema = z.object({
   slug: z.string().min(1).optional(),
   title: z.string().min(1),
   issuer: z.string().min(1),
   date: z.string().min(1),
-  credentialLink: z.string().url().optional(),
+  credentialLink: optionalUrlString,
   summary: z.string().min(1),
   content: z.string().min(1),
   imageFileId: z.string().min(24).optional(),

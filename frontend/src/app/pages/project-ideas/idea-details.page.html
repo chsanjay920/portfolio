@@ -38,7 +38,7 @@
       </div>
     </div>
 
-    <div class="article-content" (click)="copyCode($event)" [innerHTML]="idea()!.content | markdownHtml"></div>
+    <div class="article-content" appCodeCopy [innerHTML]="idea()!.content | markdownHtml"></div>
 
     @if (idea()!.links.length) {
       <div class="external-links">

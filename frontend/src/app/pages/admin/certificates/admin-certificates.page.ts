@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../../shared/toast/toast.service';
+import { getHttpErrorMessage } from '../../../shared/utils/http-error';
 
 type CertificateDoc = {
   _id: string;
@@ -106,9 +107,10 @@ export class AdminCertificatesPageComponent {
       }
       await this.reload();
       this.newItem();
-    } catch {
-      this.error.set('Failed to save certificate.');
-      this.toast.error('Failed to save certificate');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to save certificate.');
+      this.error.set(message);
+      this.toast.error(message);
     } finally {
       this.saving.set(false);
     }
@@ -122,9 +124,10 @@ export class AdminCertificatesPageComponent {
       await this.reload();
       if (this.selected()?._id === c._id) this.newItem();
       this.toast.success('Certificate deleted');
-    } catch {
-      this.error.set('Failed to delete certificate.');
-      this.toast.error('Failed to delete certificate');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to delete certificate.');
+      this.error.set(message);
+      this.toast.error(message);
     }
   }
 
@@ -141,9 +144,10 @@ export class AdminCertificatesPageComponent {
       await firstValueFrom(this.http.post(`${environment.apiBaseUrl}/certificates/${sel._id}/image`, fd));
       await this.reload();
       this.toast.success('Image uploaded');
-    } catch {
-      this.error.set('Failed to upload image.');
-      this.toast.error('Failed to upload image');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to upload image.');
+      this.error.set(message);
+      this.toast.error(message);
     }
   }
 }

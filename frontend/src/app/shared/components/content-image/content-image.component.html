@@ -1,9 +1,13 @@
-<img
-  class="content-image"
-  [class.content-image--card]="variant === 'card'"
-  [class.content-image--hero]="variant === 'hero'"
-  [src]="imageSrc()"
-  [alt]="alt"
-  loading="lazy"
-  (error)="handleError()"
-/>
+<div
+  class="content-image-frame"
+  [class.content-image-frame--card]="variant === 'card'"
+  [class.content-image-frame--hero]="variant === 'hero'"
+>
+  <img
+    class="content-image"
+    [src]="imageSrc()"
+    [alt]="alt"
+    loading="lazy"
+    (error)="handleError()"
+  />
+</div>

@@ -60,8 +60,13 @@
         </div>
 
         <div class="row">
-          <label>Banner image upload (select an existing blog first)</label>
-          <input type="file" accept="image/*" (change)="uploadBanner($any($event.target).files?.[0] ?? null)" />
+          <label>Banner image</label>
+          <input type="file" accept="image/*" (change)="onBannerSelected($any($event.target).files?.[0] ?? null)" />
+          @if (pendingBannerFile()) {
+            <p class="muted">Selected: {{ pendingBannerFile()!.name }} (uploads on save)</p>
+          } @else if (selected()?.bannerFileId) {
+            <p class="muted">Current banner is set.</p>
+          }
         </div>
 
         <div class="actions">

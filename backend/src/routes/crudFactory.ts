@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { z, type ZodTypeAny } from 'zod';
 import { ApiError } from '../middleware/apiError.js';
 import { requireAuth } from '../middleware/requireAuth.js';
+import { handleMongoWriteError } from '../utils/mongoErrors.js';
 
 type AnyModel = {
   find: (filter?: unknown) => { lean: () => { exec: () => Promise<unknown[]> } };
@@ -76,6 +77,7 @@ export function createCrudRouter(opts: {
       const created = await opts.model.create(parsed.data);
       res.status(201).json({ item: mapOne(created) });
     } catch (err) {
+      if (handleMongoWriteError(err, next)) return;
       next(err);
     }
   });
@@ -98,6 +100,7 @@ export function createCrudRouter(opts: {
       }
       res.json({ item: mapOne(item) });
     } catch (err) {
+      if (handleMongoWriteError(err, next)) return;
       next(err);
     }
   });

@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../../shared/toast/toast.service';
+import { getHttpErrorMessage } from '../../../shared/utils/http-error';
 
 type ExperienceDoc = {
   _id: string;
@@ -79,9 +80,10 @@ export class AdminExperiencePageComponent {
       }
       await this.reload();
       this.newItem();
-    } catch {
-      this.error.set('Failed to save experience.');
-      this.toast.error('Failed to save experience');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to save experience.');
+      this.error.set(message);
+      this.toast.error(message);
     } finally {
       this.saving.set(false);
     }
@@ -95,9 +97,10 @@ export class AdminExperiencePageComponent {
       await this.reload();
       if (this.selected()?._id === e._id) this.newItem();
       this.toast.success('Experience deleted');
-    } catch {
-      this.error.set('Failed to delete experience.');
-      this.toast.error('Failed to delete experience');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to delete experience.');
+      this.error.set(message);
+      this.toast.error(message);
     }
   }
 }

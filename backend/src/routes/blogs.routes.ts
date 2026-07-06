@@ -7,6 +7,7 @@ import { requireAuth } from '../middleware/requireAuth.js';
 import { slugify } from '../utils/slug.js';
 import { uploadBufferToR2 } from '../utils/r2.js';
 import { mapFileIds } from '../utils/json.js';
+import { handleMongoWriteError } from '../utils/mongoErrors.js';
 
 const blogCreateSchema = z.object({
   title: z.string().min(1),
@@ -80,6 +81,7 @@ blogsRouter.post('/', requireAuth, async (req, res, next) => {
     const created = await BlogModel.create({ ...parsed.data, slug });
     res.status(201).json({ blog: mapFileIds(created.toObject() as any, ['bannerFileId']) });
   } catch (err) {
+    if (handleMongoWriteError(err, next)) return;
     next(err);
   }
 });
@@ -102,6 +104,7 @@ blogsRouter.put('/:id', requireAuth, async (req, res, next) => {
     }
     res.json({ blog: mapFileIds(blog as any, ['bannerFileId']) });
   } catch (err) {
+    if (handleMongoWriteError(err, next)) return;
     next(err);
   }
 });

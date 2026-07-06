@@ -1,4 +1,5 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, inject } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { marked, type Tokens } from 'marked';
 import DOMPurify from 'dompurify';
 
@@ -7,7 +8,9 @@ import DOMPurify from 'dompurify';
   standalone: true,
 })
 export class MarkdownHtmlPipe implements PipeTransform {
-  transform(markdown?: string): string {
+  private readonly sanitizer = inject(DomSanitizer);
+
+  transform(markdown?: string): SafeHtml {
     if (!markdown) return '';
 
     const renderer = new marked.Renderer();
@@ -30,10 +33,11 @@ export class MarkdownHtmlPipe implements PipeTransform {
 
     const parsed = marked.parse(markdown, { gfm: true, renderer, async: false }) as string;
 
-    return DOMPurify.sanitize(parsed, {
+    const clean = DOMPurify.sanitize(parsed, {
       ADD_TAGS: ['button', 'span', 'div'],
       ADD_ATTR: ['class', 'type', 'aria-label'],
     });
+
+    return this.sanitizer.bypassSecurityTrustHtml(clean);
   }
 }
-

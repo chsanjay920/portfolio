@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../../shared/toast/toast.service';
+import { getHttpErrorMessage } from '../../../shared/utils/http-error';
 
 type SocialLink = { platform: string; label: string; href: string };
 type ProfileApiDoc = {
@@ -139,9 +140,10 @@ export class AdminProfilePageComponent {
       );
       this.current.set(res.profile);
       this.toast.success('Profile saved');
-    } catch {
-      this.error.set('Failed to save profile.');
-      this.toast.error('Failed to save profile');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to save profile.');
+      this.error.set(message);
+      this.toast.error(message);
     } finally {
       this.saving.set(false);
     }
@@ -158,9 +160,10 @@ export class AdminProfilePageComponent {
       );
       this.current.set(res.profile);
       this.toast.success('Photo uploaded');
-    } catch {
-      this.error.set('Failed to upload photo.');
-      this.toast.error('Failed to upload photo');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to upload photo.');
+      this.error.set(message);
+      this.toast.error(message);
     }
   }
 
@@ -175,9 +178,10 @@ export class AdminProfilePageComponent {
       );
       this.current.set(res.profile);
       this.toast.success('Resume uploaded');
-    } catch {
-      this.error.set('Failed to upload resume.');
-      this.toast.error('Failed to upload resume');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to upload resume.');
+      this.error.set(message);
+      this.toast.error(message);
     }
   }
 }

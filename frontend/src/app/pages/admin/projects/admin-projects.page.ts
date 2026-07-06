@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ToastService } from '../../../shared/toast/toast.service';
+import { getHttpErrorMessage } from '../../../shared/utils/http-error';
 
 type ProjectDoc = {
   _id: string;
@@ -118,9 +119,10 @@ export class AdminProjectsPageComponent {
       }
       await this.reload();
       this.newItem();
-    } catch {
-      this.error.set('Failed to save project.');
-      this.toast.error('Failed to save project');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to save project.');
+      this.error.set(message);
+      this.toast.error(message);
     } finally {
       this.saving.set(false);
     }
@@ -134,9 +136,10 @@ export class AdminProjectsPageComponent {
       await this.reload();
       if (this.selected()?._id === p._id) this.newItem();
       this.toast.success('Project deleted');
-    } catch {
-      this.error.set('Failed to delete project.');
-      this.toast.error('Failed to delete project');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to delete project.');
+      this.error.set(message);
+      this.toast.error(message);
     }
   }
 
@@ -153,9 +156,10 @@ export class AdminProjectsPageComponent {
       await firstValueFrom(this.http.post(`${environment.apiBaseUrl}/projects/${sel._id}/images`, fd));
       await this.reload();
       this.toast.success('Image uploaded');
-    } catch {
-      this.error.set('Failed to upload image.');
-      this.toast.error('Failed to upload image');
+    } catch (err) {
+      const message = getHttpErrorMessage(err, 'Failed to upload image.');
+      this.error.set(message);
+      this.toast.error(message);
     }
   }
 }

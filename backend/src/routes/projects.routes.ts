@@ -7,6 +7,7 @@ import { requireAuth } from '../middleware/requireAuth.js';
 import { ApiError } from '../middleware/apiError.js';
 import { uploadBufferToR2 } from '../utils/r2.js';
 import { mapFileIds } from '../utils/json.js';
+import { urlString } from '../utils/validation.js';
 
 const createSchema = z.object({
   slug: z.string().min(1).optional(),
@@ -14,7 +15,7 @@ const createSchema = z.object({
   summary: z.string().min(1),
   content: z.string().min(1),
   techStack: z.array(z.string().min(1)).default([]),
-  links: z.array(z.object({ label: z.string().min(1), href: z.string().url() })).default([]),
+  links: z.array(z.object({ label: z.string().min(1), href: urlString })).default([]),
   imageFileIds: z.array(z.string().min(24)).default([]),
 });
 

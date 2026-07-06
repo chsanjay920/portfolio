@@ -1,18 +1,30 @@
-.content-image {
-  display: block;
+.content-image-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  object-fit: cover;
+  overflow: hidden;
   border: 1px solid var(--border);
   background: #f8fafc;
 }
 
-.content-image--card {
+.content-image-frame--card {
   height: 180px;
   border-radius: 12px;
 }
 
-.content-image--hero {
+.content-image-frame--hero {
   height: clamp(220px, 38vw, 340px);
   border-radius: 14px;
   margin: 1.4rem 0 1.6rem;
+}
+
+.content-image {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
 }

@@ -42,7 +42,7 @@
       </div>
     </div>
 
-    <div class="article-content" (click)="copyCode($event)" [innerHTML]="project()!.content | markdownHtml"></div>
+    <div class="article-content" appCodeCopy [innerHTML]="project()!.content | markdownHtml"></div>
 
     @if (project()!.links.length) {
       <div class="external-links">
