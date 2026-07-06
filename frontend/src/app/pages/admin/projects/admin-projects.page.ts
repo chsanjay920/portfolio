@@ -31,6 +31,7 @@ export class AdminProjectsPageComponent {
 
   protected readonly items = signal<ProjectDoc[]>([]);
   protected readonly selected = signal<ProjectDoc | null>(null);
+  protected readonly pendingImageFile = signal<File | null>(null);
   protected readonly error = signal<string | null>(null);
   protected readonly saving = signal(false);
 
@@ -61,6 +62,7 @@ export class AdminProjectsPageComponent {
 
   select(p: ProjectDoc) {
     this.selected.set(p);
+    this.pendingImageFile.set(null);
     this.form.patchValue({
       title: p.title,
       slug: p.slug,
@@ -73,6 +75,7 @@ export class AdminProjectsPageComponent {
 
   newItem() {
     this.selected.set(null);
+    this.pendingImageFile.set(null);
     this.form.reset({ title: '', slug: '', summary: '', content: '', techStackCsv: '', linksJson: '[]' });
   }
 
@@ -110,15 +113,38 @@ export class AdminProjectsPageComponent {
     this.saving.set(true);
     try {
       const sel = this.selected();
+      let savedProject: ProjectDoc;
+
       if (!sel) {
-        await firstValueFrom(this.http.post(`${environment.apiBaseUrl}/projects`, body));
+        const res = await firstValueFrom(
+          this.http.post<{ item: ProjectDoc }>(`${environment.apiBaseUrl}/projects`, body),
+        );
+        savedProject = res.item;
         this.toast.success('Project created');
       } else {
-        await firstValueFrom(this.http.put(`${environment.apiBaseUrl}/projects/${sel._id}`, body));
+        const res = await firstValueFrom(
+          this.http.put<{ item: ProjectDoc }>(`${environment.apiBaseUrl}/projects/${sel._id}`, body),
+        );
+        savedProject = res.item;
         this.toast.success('Project updated');
       }
+
+      const pendingImage = this.pendingImageFile();
+      if (pendingImage) {
+        savedProject = await this.uploadImageToProject(savedProject._id, pendingImage);
+        this.pendingImageFile.set(null);
+      }
+
       await this.reload();
-      this.newItem();
+      this.selected.set(savedProject);
+      this.form.patchValue({
+        title: savedProject.title,
+        slug: savedProject.slug,
+        summary: savedProject.summary,
+        content: savedProject.content,
+        techStackCsv: (savedProject.techStack ?? []).join(', '),
+        linksJson: JSON.stringify(savedProject.links ?? [], null, 2),
+      });
     } catch (err) {
       const message = getHttpErrorMessage(err, 'Failed to save project.');
       this.error.set(message);
@@ -143,24 +169,36 @@ export class AdminProjectsPageComponent {
     }
   }
 
-  async uploadImage(file: File | null) {
+  async onImageSelected(file: File | null) {
+    if (!file) return;
+
     const sel = this.selected();
-    if (!file || !sel) {
-      this.error.set('Select a project first, then upload an image.');
+    if (sel) {
+      this.error.set(null);
+      try {
+        const project = await this.uploadImageToProject(sel._id, file);
+        this.selected.set(project);
+        await this.reload();
+      } catch (err) {
+        const message = getHttpErrorMessage(err, 'Failed to upload image.');
+        this.error.set(message);
+        this.toast.error(message);
+      }
       return;
     }
+
+    this.pendingImageFile.set(file);
     this.error.set(null);
+    this.toast.success('Image will upload when you save the project');
+  }
+
+  private async uploadImageToProject(projectId: string, file: File): Promise<ProjectDoc> {
     const fd = new FormData();
     fd.append('file', file);
-    try {
-      await firstValueFrom(this.http.post(`${environment.apiBaseUrl}/projects/${sel._id}/images`, fd));
-      await this.reload();
-      this.toast.success('Image uploaded');
-    } catch (err) {
-      const message = getHttpErrorMessage(err, 'Failed to upload image.');
-      this.error.set(message);
-      this.toast.error(message);
-    }
+    const res = await firstValueFrom(
+      this.http.post<{ item: ProjectDoc }>(`${environment.apiBaseUrl}/projects/${projectId}/images`, fd),
+    );
+    this.toast.success('Image uploaded');
+    return res.item;
   }
 }
-

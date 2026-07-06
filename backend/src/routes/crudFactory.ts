@@ -75,7 +75,11 @@ export function createCrudRouter(opts: {
 
     try {
       const created = await opts.model.create(parsed.data);
-      res.status(201).json({ item: mapOne(created) });
+      const plain =
+        created && typeof (created as { toObject?: () => unknown }).toObject === 'function'
+          ? (created as { toObject: () => unknown }).toObject()
+          : created;
+      res.status(201).json({ item: mapOne(plain) });
     } catch (err) {
       if (handleMongoWriteError(err, next)) return;
       next(err);

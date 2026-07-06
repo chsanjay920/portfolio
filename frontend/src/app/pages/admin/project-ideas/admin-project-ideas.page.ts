@@ -30,6 +30,7 @@ export class AdminProjectIdeasPageComponent {
 
   protected readonly items = signal<IdeaDoc[]>([]);
   protected readonly selected = signal<IdeaDoc | null>(null);
+  protected readonly pendingImageFile = signal<File | null>(null);
   protected readonly error = signal<string | null>(null);
   protected readonly saving = signal(false);
 
@@ -58,6 +59,7 @@ export class AdminProjectIdeasPageComponent {
 
   select(i: IdeaDoc) {
     this.selected.set(i);
+    this.pendingImageFile.set(null);
     this.form.patchValue({
       title: i.title,
       slug: i.slug,
@@ -69,6 +71,7 @@ export class AdminProjectIdeasPageComponent {
 
   newItem() {
     this.selected.set(null);
+    this.pendingImageFile.set(null);
     this.form.reset({ title: '', slug: '', summary: '', content: '', resourcesJson: '[]' });
   }
 
@@ -100,15 +103,37 @@ export class AdminProjectIdeasPageComponent {
     this.saving.set(true);
     try {
       const sel = this.selected();
+      let savedIdea: IdeaDoc;
+
       if (!sel) {
-        await firstValueFrom(this.http.post(`${environment.apiBaseUrl}/projectIdeas`, body));
+        const res = await firstValueFrom(
+          this.http.post<{ item: IdeaDoc }>(`${environment.apiBaseUrl}/projectIdeas`, body),
+        );
+        savedIdea = res.item;
         this.toast.success('Idea created');
       } else {
-        await firstValueFrom(this.http.put(`${environment.apiBaseUrl}/projectIdeas/${sel._id}`, body));
+        const res = await firstValueFrom(
+          this.http.put<{ item: IdeaDoc }>(`${environment.apiBaseUrl}/projectIdeas/${sel._id}`, body),
+        );
+        savedIdea = res.item;
         this.toast.success('Idea updated');
       }
+
+      const pendingImage = this.pendingImageFile();
+      if (pendingImage) {
+        savedIdea = await this.uploadImageToIdea(savedIdea._id, pendingImage);
+        this.pendingImageFile.set(null);
+      }
+
       await this.reload();
-      this.newItem();
+      this.selected.set(savedIdea);
+      this.form.patchValue({
+        title: savedIdea.title,
+        slug: savedIdea.slug,
+        summary: savedIdea.summary,
+        content: savedIdea.content,
+        resourcesJson: JSON.stringify(savedIdea.resources ?? [], null, 2),
+      });
     } catch (err) {
       const message = getHttpErrorMessage(err, 'Failed to save idea.');
       this.error.set(message);
@@ -133,24 +158,36 @@ export class AdminProjectIdeasPageComponent {
     }
   }
 
-  async uploadImage(file: File | null) {
+  async onImageSelected(file: File | null) {
+    if (!file) return;
+
     const sel = this.selected();
-    if (!file || !sel) {
-      this.error.set('Select an idea first, then upload an image.');
+    if (sel) {
+      this.error.set(null);
+      try {
+        const idea = await this.uploadImageToIdea(sel._id, file);
+        this.selected.set(idea);
+        await this.reload();
+      } catch (err) {
+        const message = getHttpErrorMessage(err, 'Failed to upload image.');
+        this.error.set(message);
+        this.toast.error(message);
+      }
       return;
     }
+
+    this.pendingImageFile.set(file);
     this.error.set(null);
+    this.toast.success('Image will upload when you save the idea');
+  }
+
+  private async uploadImageToIdea(ideaId: string, file: File): Promise<IdeaDoc> {
     const fd = new FormData();
     fd.append('file', file);
-    try {
-      await firstValueFrom(this.http.post(`${environment.apiBaseUrl}/projectIdeas/${sel._id}/image`, fd));
-      await this.reload();
-      this.toast.success('Image uploaded');
-    } catch (err) {
-      const message = getHttpErrorMessage(err, 'Failed to upload image.');
-      this.error.set(message);
-      this.toast.error(message);
-    }
+    const res = await firstValueFrom(
+      this.http.post<{ item: IdeaDoc }>(`${environment.apiBaseUrl}/projectIdeas/${ideaId}/image`, fd),
+    );
+    this.toast.success('Image uploaded');
+    return res.item;
   }
 }
-

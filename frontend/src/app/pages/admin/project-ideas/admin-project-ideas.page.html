@@ -30,13 +30,16 @@
 
     <div class="card">
       <div class="row">
-        <label>Current image</label>
-        @if (selected() && imageUrl(selected()!)) {
+        <label>Image</label>
+        @if (selected() && imageUrl(selected()!) && !pendingImageFile()) {
           <img [src]="imageUrl(selected()!)!" alt="Project idea image" style="max-width: 180px; border-radius: 12px;" />
-        } @else {
-          <div class="muted">Select an idea to upload or preview its image.</div>
         }
-        <input type="file" accept="image/*" (change)="uploadImage($any($event.target).files?.[0] ?? null)" />
+        <input type="file" accept="image/*" (change)="onImageSelected($any($event.target).files?.[0] ?? null)" />
+        @if (pendingImageFile()) {
+          <p class="muted">Selected: {{ pendingImageFile()!.name }} (uploads on save)</p>
+        } @else if (!selected()) {
+          <p class="muted">Choose an image before saving a new idea.</p>
+        }
       </div>
     </div>
 

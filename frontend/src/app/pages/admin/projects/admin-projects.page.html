@@ -56,8 +56,13 @@
         </div>
 
         <div class="row">
-          <label>Upload image (select a project first)</label>
-          <input type="file" accept="image/*" (change)="uploadImage($any($event.target).files?.[0] ?? null)" />
+          <label>Image</label>
+          <input type="file" accept="image/*" (change)="onImageSelected($any($event.target).files?.[0] ?? null)" />
+          @if (pendingImageFile()) {
+            <p class="muted">Selected: {{ pendingImageFile()!.name }} (uploads on save)</p>
+          } @else if (selected() && imageUrl(selected()!)) {
+            <p class="muted">Current image is set.</p>
+          }
         </div>
 
         <div class="actions">

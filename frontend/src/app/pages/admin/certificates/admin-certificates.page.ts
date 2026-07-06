@@ -32,6 +32,7 @@ export class AdminCertificatesPageComponent {
 
   protected readonly items = signal<CertificateDoc[]>([]);
   protected readonly selected = signal<CertificateDoc | null>(null);
+  protected readonly pendingImageFile = signal<File | null>(null);
   protected readonly error = signal<string | null>(null);
   protected readonly saving = signal(false);
 
@@ -62,6 +63,7 @@ export class AdminCertificatesPageComponent {
 
   select(c: CertificateDoc) {
     this.selected.set(c);
+    this.pendingImageFile.set(null);
     this.form.patchValue({
       title: c.title,
       slug: c.slug,
@@ -75,6 +77,7 @@ export class AdminCertificatesPageComponent {
 
   newItem() {
     this.selected.set(null);
+    this.pendingImageFile.set(null);
     this.form.reset({ title: '', slug: '', issuer: '', date: '', credentialLink: '', summary: '', content: '' });
   }
 
@@ -98,15 +101,39 @@ export class AdminCertificatesPageComponent {
     this.saving.set(true);
     try {
       const sel = this.selected();
+      let savedCertificate: CertificateDoc;
+
       if (!sel) {
-        await firstValueFrom(this.http.post(`${environment.apiBaseUrl}/certificates`, body));
+        const res = await firstValueFrom(
+          this.http.post<{ item: CertificateDoc }>(`${environment.apiBaseUrl}/certificates`, body),
+        );
+        savedCertificate = res.item;
         this.toast.success('Certificate created');
       } else {
-        await firstValueFrom(this.http.put(`${environment.apiBaseUrl}/certificates/${sel._id}`, body));
+        const res = await firstValueFrom(
+          this.http.put<{ item: CertificateDoc }>(`${environment.apiBaseUrl}/certificates/${sel._id}`, body),
+        );
+        savedCertificate = res.item;
         this.toast.success('Certificate updated');
       }
+
+      const pendingImage = this.pendingImageFile();
+      if (pendingImage) {
+        savedCertificate = await this.uploadImageToCertificate(savedCertificate._id, pendingImage);
+        this.pendingImageFile.set(null);
+      }
+
       await this.reload();
-      this.newItem();
+      this.selected.set(savedCertificate);
+      this.form.patchValue({
+        title: savedCertificate.title,
+        slug: savedCertificate.slug,
+        issuer: savedCertificate.issuer,
+        date: savedCertificate.date,
+        credentialLink: savedCertificate.credentialLink ?? '',
+        summary: savedCertificate.summary,
+        content: savedCertificate.content,
+      });
     } catch (err) {
       const message = getHttpErrorMessage(err, 'Failed to save certificate.');
       this.error.set(message);
@@ -131,24 +158,36 @@ export class AdminCertificatesPageComponent {
     }
   }
 
-  async uploadImage(file: File | null) {
+  async onImageSelected(file: File | null) {
+    if (!file) return;
+
     const sel = this.selected();
-    if (!file || !sel) {
-      this.error.set('Select a certificate first, then upload an image.');
+    if (sel) {
+      this.error.set(null);
+      try {
+        const certificate = await this.uploadImageToCertificate(sel._id, file);
+        this.selected.set(certificate);
+        await this.reload();
+      } catch (err) {
+        const message = getHttpErrorMessage(err, 'Failed to upload image.');
+        this.error.set(message);
+        this.toast.error(message);
+      }
       return;
     }
+
+    this.pendingImageFile.set(file);
     this.error.set(null);
+    this.toast.success('Image will upload when you save the certificate');
+  }
+
+  private async uploadImageToCertificate(certificateId: string, file: File): Promise<CertificateDoc> {
     const fd = new FormData();
     fd.append('file', file);
-    try {
-      await firstValueFrom(this.http.post(`${environment.apiBaseUrl}/certificates/${sel._id}/image`, fd));
-      await this.reload();
-      this.toast.success('Image uploaded');
-    } catch (err) {
-      const message = getHttpErrorMessage(err, 'Failed to upload image.');
-      this.error.set(message);
-      this.toast.error(message);
-    }
+    const res = await firstValueFrom(
+      this.http.post<{ item: CertificateDoc }>(`${environment.apiBaseUrl}/certificates/${certificateId}/image`, fd),
+    );
+    this.toast.success('Image uploaded');
+    return res.item;
   }
 }
-
