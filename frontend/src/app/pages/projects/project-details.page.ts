@@ -19,7 +19,6 @@ export class ProjectDetailsPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly projectsApi = inject(ProjectsApi);
   private readonly toast = inject(ToastService);
-  protected readonly projectSlug = this.route.snapshot.paramMap.get('slug') ?? '';
   protected readonly project = signal<ProjectItem | null>(null);
   readonly loading = signal(true);
 
@@ -59,15 +58,19 @@ export class ProjectDetailsPageComponent {
   }
 
   constructor() {
-    void this.load();
+    this.route.paramMap.subscribe((params) => {
+      const slug = params.get('slug') ?? '';
+      void this.load(slug);
+    });
   }
 
-  private async load() {
+  private async load(slug: string) {
+    this.loading.set(true);
+    this.project.set(null);
     try {
-      this.project.set(await this.projectsApi.getBySlug(this.projectSlug));
+      this.project.set(await this.projectsApi.getBySlug(slug));
     } finally {
       this.loading.set(false);
     }
   }
 }
-

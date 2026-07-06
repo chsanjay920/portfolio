@@ -1,6 +1,7 @@
+import { Readable } from 'node:stream';
 import { Router } from 'express';
 import { ApiError } from '../middleware/apiError.js';
-import { getUploadsBucket, parseObjectId } from '../utils/gridfs.js';
+import { getR2ObjectMeta, getR2ObjectStream } from '../utils/r2.js';
 
 export const filesRouter = Router();
 
@@ -12,22 +13,32 @@ filesRouter.get('/:fileId', async (req, res, next) => {
       return;
     }
 
-    const bucket = getUploadsBucket();
-    const id = parseObjectId(fileId);
-
-    const files = await bucket.find({ _id: id }).toArray();
-    if (!files.length) {
+    let meta: { contentType?: string; contentLength?: number };
+    try {
+      meta = await getR2ObjectMeta(fileId);
+    } catch {
       next(new ApiError(404, 'NOT_FOUND', 'File not found'));
       return;
     }
 
-    const file = files[0];
-    if (file.contentType) res.setHeader('content-type', file.contentType);
-    res.setHeader('content-length', String(file.length));
+    const object = await getR2ObjectStream(fileId);
+    if (!object.Body) {
+      next(new ApiError(404, 'NOT_FOUND', 'File not found'));
+      return;
+    }
 
-    bucket.openDownloadStream(id).pipe(res);
+    if (meta.contentType) res.setHeader('content-type', meta.contentType);
+    if (meta.contentLength) res.setHeader('content-length', String(meta.contentLength));
+
+    const body = object.Body;
+    if (body instanceof Readable) {
+      body.pipe(res);
+      return;
+    }
+
+    const bytes = await body.transformToByteArray();
+    res.send(Buffer.from(bytes));
   } catch (err) {
     next(err);
   }
 });
-

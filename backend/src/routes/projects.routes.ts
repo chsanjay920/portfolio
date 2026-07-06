@@ -5,7 +5,7 @@ import { createCrudRouter } from './crudFactory.js';
 import { slugify } from '../utils/slug.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { ApiError } from '../middleware/apiError.js';
-import { uploadBufferToGridFS } from '../utils/gridfs.js';
+import { uploadBufferToR2 } from '../utils/r2.js';
 import { mapFileIds } from '../utils/json.js';
 
 const createSchema = z.object({
@@ -40,7 +40,7 @@ projectsRouter.post('/:id/images', requireAuth, upload.single('file'), async (re
       return;
     }
 
-    const fileId = await uploadBufferToGridFS({
+    const fileId = await uploadBufferToR2({
       filename: req.file.originalname,
       contentType: req.file.mimetype,
       buffer: req.file.buffer,
@@ -59,7 +59,7 @@ projectsRouter.post('/:id/images', requireAuth, upload.single('file'), async (re
       return;
     }
 
-    res.json({ item: mapFileIds(item as any, ['imageFileIds']), fileId: fileId.toString() });
+    res.json({ item: mapFileIds(item as any, ['imageFileIds']), fileId });
   } catch (err) {
     next(err);
   }

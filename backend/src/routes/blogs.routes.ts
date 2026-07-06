@@ -5,7 +5,7 @@ import { BlogModel } from '../models/blog.js';
 import { ApiError } from '../middleware/apiError.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { slugify } from '../utils/slug.js';
-import { uploadBufferToGridFS } from '../utils/gridfs.js';
+import { uploadBufferToR2 } from '../utils/r2.js';
 import { mapFileIds } from '../utils/json.js';
 
 const blogCreateSchema = z.object({
@@ -126,7 +126,7 @@ blogsRouter.post('/:id/banner', requireAuth, upload.single('file'), async (req, 
       return;
     }
 
-    const fileId = await uploadBufferToGridFS({
+    const fileId = await uploadBufferToR2({
       filename: req.file.originalname,
       contentType: req.file.mimetype,
       buffer: req.file.buffer,

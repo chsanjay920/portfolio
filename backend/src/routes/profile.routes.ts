@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { ProfileModel } from '../models/profile.js';
 import { ApiError } from '../middleware/apiError.js';
 import { requireAuth } from '../middleware/requireAuth.js';
-import { uploadBufferToGridFS } from '../utils/gridfs.js';
+import { uploadBufferToR2 } from '../utils/r2.js';
 import { mapFileIds } from '../utils/json.js';
 
 const socialLinkSchema = z.object({
@@ -62,7 +62,7 @@ profileRouter.post('/photo', requireAuth, upload.single('file'), async (req, res
       return;
     }
 
-    const fileId = await uploadBufferToGridFS({
+    const fileId = await uploadBufferToR2({
       filename: req.file.originalname,
       contentType: req.file.mimetype,
       buffer: req.file.buffer,
@@ -92,7 +92,7 @@ profileRouter.post('/resume', requireAuth, upload.single('file'), async (req, re
       return;
     }
 
-    const fileId = await uploadBufferToGridFS({
+    const fileId = await uploadBufferToR2({
       filename: req.file.originalname,
       contentType: req.file.mimetype,
       buffer: req.file.buffer,

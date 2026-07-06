@@ -28,8 +28,7 @@ export class MarkdownHtmlPipe implements PipeTransform {
       `;
     };
 
-    const parsed = marked.parse(markdown, { gfm: true, renderer }) as string | Promise<string>;
-    if (typeof parsed !== 'string') return '';
+    const parsed = marked.parse(markdown, { gfm: true, renderer, async: false }) as string;
 
     return DOMPurify.sanitize(parsed, {
       ADD_TAGS: ['button', 'span', 'div'],
