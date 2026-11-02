@@ -11,8 +11,8 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(16),
   JWT_EXPIRES_IN: z.string().min(1).default('7d'),
 
-  ADMIN_EMAIL: z.string().email(),
-  ADMIN_PASSWORD: z.string().min(8),
+  ADMIN_EMAIL: z.string().trim().email(),
+  ADMIN_PASSWORD: z.string().trim().min(8),
 
   CORS_ORIGIN: z.string().min(1).default('http://localhost:4200'),
 
